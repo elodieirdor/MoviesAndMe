@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
-import { getImageFromApi} from '../API/TMDBApi'
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { getImageFromApi } from '../API/TMDBApi'
 
 class FilmItem extends React.Component {
     render() {
-        const film = this.props.film
+        const { film, displayDetailForFilm } = this.props
         return (
-            <View style={styles.main_container}>
-                <Image 
+            <TouchableOpacity
+                style={styles.main_container}
+                onPress={() => displayDetailForFilm(film.id)}>
+                <Image
                     style={styles.image}
-                    source={{uri:getImageFromApi(film.poster_path)}}
+                    source={{ uri: getImageFromApi(film.poster_path) }}
                 />
                 <View style={styles.content_container}>
                     <View style={styles.header_container}>
@@ -21,9 +23,9 @@ class FilmItem extends React.Component {
                     </View>
                     <View style={styles.date_container}>
                         <Text style={styles.date_text}>Sorti le {film.release_date}</Text>
-                    </View>   
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 }
@@ -51,8 +53,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         flex: 1,
         flexWrap: 'wrap',
-        paddingRight: 5  
-    },    
+        paddingRight: 5
+    },
     vote_text: {
         fontWeight: 'bold',
         fontSize: 26,
