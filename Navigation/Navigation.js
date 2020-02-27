@@ -17,9 +17,7 @@ function Navigation() {
                 />
                 <SearchStack.Screen
                     name='FilmDetail'
-                    component={FilmDetail}
-                    options={{ title: 'Film Detail' }}
-                    
+                    component={FilmDetail}                    
                 />
             </SearchStack.Navigator>
         </NavigationContainer>
