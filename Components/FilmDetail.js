@@ -1,21 +1,28 @@
 import React from 'react'
-import { StyleSheet, View, ScrollView, ActivityIndicator, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity } from 'react-native'
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDBApi'
 import moment from 'moment'
 import numeral from 'numeral'
 import { connect } from 'react-redux'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 class FilmDetail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             film: undefined,
-            isLoading: true,
+            isLoading: false
         }
     }
 
     componentDidMount() {
+        const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.route.params.idFilm)
+        if (favoriteFilmIndex !== -1) {
+            this.setState({
+                film: this.props.favoritesFilm[favoriteFilmIndex]
+            })
+            return
+        }
+        this.setState({ isLoading: true })
         getFilmDetailFromApi(this.props.route.params.idFilm).then(data => {
             this.setState({
                 film: data,
@@ -35,20 +42,20 @@ class FilmDetail extends React.Component {
     }
 
     _toggleFavorite() {
-        const action = { type: 'TOGGLE_FAVORITE', value: this.state.film }
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.film }
         this.props.dispatch(action)
     }
 
     _displayFavoriteImage() {
         var sourceImage = require('../Images/ic_favorite_border.png')
         if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
-          sourceImage = require('../Images/ic_favorite.png')
+            sourceImage = require('../Images/ic_favorite.png')
         }
         return (
-          <Image
-            style={styles.favorite_image}
-            source={sourceImage}
-          />
+            <Image
+                style={styles.favorite_image}
+                source={sourceImage}
+            />
         )
     }
 
@@ -72,29 +79,24 @@ class FilmDetail extends React.Component {
                     <Text style={styles.default_text}>Note : {film.vote_average} / 10</Text>
                     <Text style={styles.default_text}>Nombre de votes : {film.vote_count}</Text>
                     <Text style={styles.default_text}>Budget : {numeral(film.budget).format('0,0[.]00 $')}</Text>
-                    <Text style={styles.default_text}>Genre(s) : {film.genres.map((genre) => {
-                        return genre.name
-                    }).join(' / ')}
+                    <Text style={styles.default_text}>Genre(s) : {film.genres.map(function (genre) {
+                        return genre.name;
+                    }).join(" / ")}
                     </Text>
-                    <Text style={styles.default_text}>Companie(s) : {film.production_companies.map((company) => {
-                        return company.name
-                    }).join(' / ')}
+                    <Text style={styles.default_text}>Companie(s) : {film.production_companies.map(function (company) {
+                        return company.name;
+                    }).join(" / ")}
                     </Text>
                 </ScrollView>
             )
         }
     }
 
-    componentDidUpdate() {
-        console.log('compoenent did update')
-        console.log(this.props.favoritesFilm)
-    }
-
     render() {
         return (
             <View style={styles.main_container}>
-                {this._displayFilm()}
                 {this._displayLoading()}
+                {this._displayFilm()}
             </View>
         )
     }
@@ -116,16 +118,9 @@ const styles = StyleSheet.create({
     scrollview_container: {
         flex: 1,
     },
-    favorite_container: {
-        alignItems: 'center'
-    },
-    favorite_image: {
-        width: 40,
-        height: 40,
-    },
     image: {
-        margin: 5,
         height: 169,
+        margin: 5,
     },
     title_text: {
         fontWeight: 'bold',
@@ -137,21 +132,27 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         color: '#000000',
-        textAlign: 'center',
+        textAlign: 'center'
+    },
+    favorite_container: {
+        alignItems: 'center',
     },
     description_text: {
         fontStyle: 'italic',
-        margin: 5,
-        marginBottom: 15,
         color: '#666666',
+        margin: 5,
+        marginBottom: 15
     },
     default_text: {
         marginLeft: 5,
         marginRight: 5,
         marginTop: 5,
     },
+    favorite_image: {
+        width: 40,
+        height: 40,
+    }
 })
-
 
 const mapStateToProps = (state) => {
     return {

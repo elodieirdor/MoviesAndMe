@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TextInput, Button, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, TextInput, Button, Text, FlatList, ActivityIndicator } from 'react-native'
 import FilmList from './FilmList'
 import { getFilmsFromApiWithSearchedText } from '../API/TMDBApi'
 
@@ -14,6 +14,7 @@ class Search extends React.Component {
             films: [],
             isLoading: false
         }
+        this._loadFilms = this._loadFilms.bind(this)
     }
 
     _loadFilms() {
@@ -70,6 +71,7 @@ class Search extends React.Component {
                     loadFilms={this._loadFilms}
                     page={this.page}
                     totalPages={this.totalPages}
+                    favoriteList={false}
                 />
                 {this._displayLoading()}
             </View>
