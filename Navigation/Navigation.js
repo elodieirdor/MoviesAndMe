@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Search from '../Components/Search'
 import Favorites from '../Components/Favorites'
 import FilmDetail from '../Components/FilmDetail'
+import Test from '../Components/Test'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const SearchStack = createStackNavigator()
@@ -38,6 +39,9 @@ function Navigation() {
                     showIcon: true,
                 }}
             >
+                <Tab.Screen
+                    name="Test"
+                    component={Test} />
                 <Tab.Screen
                     name="Search"
                     component={SearchStackNavigator}
